@@ -7,14 +7,12 @@ target_channel_id의 채널에서 입력받은 유튜브 링크를 파싱해서 
 다운받은 노래들 리스트들을 검색해서 추가하는 기능도 들어있습니다.<br>
 <br>
 <hr>
-<br>
 <h3>노래 추가</h3>
 <img src="https://drive.google.com/uc?export=view&id=1OeY_yyt-LRBgGx9AX0YnKBBXA5TNBo-3">
 target_channel_id의 채널에서 유튜브 링크를 올리면 이런식으로 자동으로 노래에 다운 후 추가가 완료됩니다.
 (이미 이전에 다운로드된적 있는 파일이면 바로 플레이리스트에 추가)<br>
 <br>
 <hr>
-<br>
 <h3>컨트롤 패널</h3>
 <img src="https://drive.google.com/uc?export=view&id=15JFya1TAZ6CBJnKSGz8aa67WCjrybEw9">
 /컨트롤 명령어 입력시 다음과 같은 컨트롤 창이 표시가 됩니다. 간단한 조작이 가능합니다.
@@ -22,7 +20,6 @@ target_channel_id의 채널에서 유튜브 링크를 올리면 이런식으로 
 <img src="https://drive.google.com/uc?export=view&id=1z_GzSkQibIB8r9QGO0xawLVJCeolJ40j">
 <br>
 <hr>
-<br>
 <h3>노래 검색</h3>
 <img src="https://drive.google.com/uc?export=view&id=1v7QAZnthBx1kDf9ogIB22kx7GLSMB_55">
 이미 다운로드 받은 노래명을 사용해 검색할수도 있습니다. 입력한 문자열을 사용해서 검색해줍니다.<br>
