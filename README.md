@@ -8,7 +8,7 @@ target_channel_id의 채널에서 입력받은 유튜브 링크를 파싱해서 
 <br>
 <hr>
 <br>
-![노래추가](https://drive.google.com/uc?export=view&id=1OeY_yyt-LRBgGx9AX0YnKBBXA5TNBo-3)
+<img src="https://drive.google.com/uc?export=view&id=1OeY_yyt-LRBgGx9AX0YnKBBXA5TNBo-3">
 <br>target_channel_id의 채널에서 유튜브 링크를 올리면 이런식으로 자동으로 노래에 다운 후 추가가 완료됩니다.
 (이미 이전에 다운로드된적 있는 파일이면 바로 플레이리스트에 추가)<br>
 <br>
