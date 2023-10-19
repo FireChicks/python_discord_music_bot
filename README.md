@@ -26,5 +26,5 @@ target_channel_id의 채널에서 입력받은 유튜브 링크를 파싱해서 
 <h3>노래 검색</h3>
 <img src="https://drive.google.com/uc?export=view&id=1v7QAZnthBx1kDf9ogIB22kx7GLSMB_55">
 <br>이미 다운로드 받은 노래명을 사용해 검색할수도 있습니다. 입력한 문자열을 사용해서 검색해줍니다.<br>
-<img src="https://drive.google.com/uc?export=view&id=19F7v7BhFaDMVUrl-PoPo2dAF90LB8miF)https://drive.google.com/uc?export=view&id=19F7v7BhFaDMVUrl-PoPo2dAF90LB8miF">
+<img src="https://drive.google.com/uc?export=view&id=19F7v7BhFaDMVUrl-PoPo2dAF90LB8miF">
 <br>검색한 내용은 다음과 같이 버튼으로 표시되며 버튼을 클릭하면 자동으로 노래가 플레이리스트큐에 추가됩니다.<br>
