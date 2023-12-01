@@ -54,6 +54,12 @@ class music(commands.Cog):
             url = message.content.split("https://www.youtube.com/watch?v=")[1]
         elif message.content.startswith("https://youtu.be/"):
             url = message.content.split("https://youtu.be/")[1]
+
+        #이미 있던 링크라서 재생시간이 들어있을 경우
+        if '&t' in url:
+            split_result = url.split('&t')
+            url = split_result[0]
+
         option = {
             'format': 'bestaudio/best',
             'outtmpl': "downloads/%(id)s",  # 다운로드 디렉토리와 파일명 형식을 설정합니다.
