@@ -61,6 +61,7 @@ class music(commands.Cog):
         voice_channel: VoiceChannel = member.voice.channel  # 사용자가 접속한 음성 채널 가져오기
 
         voice_client = interaction.guild.voice_client
+        voice_client.stop()
 
         self.clear_playList(self)
 
