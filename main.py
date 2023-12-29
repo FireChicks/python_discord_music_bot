@@ -18,7 +18,6 @@ class MyBot(commands.Bot):
         )
         self.initial_extension = [
             "Cogs.hello",
-            "Cogs.join",
             "Cogs.music"# tts 코그 추가
         ]
         self.queue = queue.Queue()
@@ -38,4 +37,4 @@ class MyBot(commands.Bot):
 
 
 bot = MyBot()
-bot.run(ET.parse('bot_account.xml').getroot().find('bot_id').text) #봇 토큰
+bot.run(ET.parse('bot_account.xml').getroot().find('token').text) #봇 토큰

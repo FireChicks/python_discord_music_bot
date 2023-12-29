@@ -34,6 +34,43 @@ class music(commands.Cog):
         if not os.path.exists("downloads/"):
             os.makedirs("downloads/")
 
+    @app_commands.command(
+        name="입장",
+        description="봇을 입장시킵니다."
+    )
+    async def join(self, interaction: Interaction) -> None:
+        member: Member = interaction.user  # Interaction에서 Member 객체 가져오기
+        voice_channel: VoiceChannel = member.voice.channel  # 사용자가 접속한 음성 채널 가져오기
+
+        voice_client = interaction.guild.voice_client
+
+        if voice_client is not None and voice_client.is_connected():
+            await voice_client.move_to(voice_channel)
+        else:
+            voice_client = await voice_channel.connect()
+
+        await interaction.response.send_message("보이스채널에 입장합니다")
+        print("bot이 " + voice_channel.name + "에 입장하였습니다.")
+
+    @app_commands.command(
+        name="퇴장",
+        description="봇을 퇴장시킵니다."
+    )
+    async def exit(self, interaction: Interaction) -> None:
+        member: Member = interaction.user  # Interaction에서 Member 객체 가져오기
+        voice_channel: VoiceChannel = member.voice.channel  # 사용자가 접속한 음성 채널 가져오기
+
+        voice_client = interaction.guild.voice_client
+
+        self.clear_playList(self)
+
+        if voice_client is not None and voice_client.is_connected():
+            await voice_client.disconnect()
+            await interaction.response.send_message("보이스채널에서 퇴장합니다")
+            print("bot이 " + voice_channel.name + "에서 퇴장하였습니다.")
+        else:
+            await interaction.response.send_message("보이스채널에 연결되어 있지 않습니다")
+
     @commands.Cog.listener()
     async def on_message(self, message: Message) -> None:
         if message.author.bot or message.channel.id != self.target_channel_id:
@@ -50,14 +87,15 @@ class music(commands.Cog):
         await self.insert_music(message)
 
     async def insert_music(self, message):
+        url = ''
         if message.content.startswith("https://www.youtube.com/watch?v="): #URL 파싱
             url = message.content.split("https://www.youtube.com/watch?v=")[1]
         elif message.content.startswith("https://youtu.be/"):
             url = message.content.split("https://youtu.be/")[1]
 
         #이미 있던 링크라서 재생시간이 들어있을 경우
-        if '&t' in url:
-            split_result = url.split('&t')
+        if "&t=" in url:
+            split_result = url.split("&t=")
             url = split_result[0]
 
         option = {
@@ -206,6 +244,12 @@ class music(commands.Cog):
 
         return found_files
 
+    def clear_playList(self):
+        if not self.queue.empty():
+            self.queue.get()
+        self.now_music_name = ''
+        self.volume = 50
+
     @app_commands.command(
         name="플레이리스트",
         description="현재 추가되어있는 노래들을 출력합니다."
@@ -218,6 +262,21 @@ class music(commands.Cog):
 
         voice_client = interaction.guild.voice_client
         await interaction.response.send_message(table)
+
+    @app_commands.command(
+        name="초기화",
+        description="현재 추가되어있는 노래들을 초기화합니다."
+    )
+    async def reset_playlist(self, interaction: Interaction) -> None:
+        member: Member = interaction.user  # Interaction에서 Member 객체 가져오기
+        voice_channel: VoiceChannel = member.voice.channel  # 사용자가 접속한 음성 채널 가져오기
+
+        voice_client = interaction.guild.voice_client
+        voice_client.stop()
+
+        self.clear_playList(self)
+
+        await voice_channel.send("플레이리스트를 초기화 했습니다.")
 
 
     @commands.command()
@@ -459,6 +518,7 @@ class music(commands.Cog):
         view.add_item(btnRes)
 
         await interaction.response.send_message("버튼을 눌러서 조작해주세요.", view=view)
+
 async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(
         music(bot),
