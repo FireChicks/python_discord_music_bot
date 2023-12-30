@@ -63,7 +63,7 @@ class music(commands.Cog):
         voice_client = interaction.guild.voice_client
         voice_client.stop()
 
-        self.clear_playList(self)
+        self.clear_playList()
 
         if voice_client is not None and voice_client.is_connected():
             await voice_client.disconnect()
@@ -97,6 +97,10 @@ class music(commands.Cog):
         #이미 있던 링크라서 재생시간이 들어있을 경우
         if "&t=" in url:
             split_result = url.split("&t=")
+            url = split_result[0]
+
+        if "?si=" in url:
+            split_result = url.split("?si=")
             url = split_result[0]
 
         option = {
@@ -275,7 +279,7 @@ class music(commands.Cog):
         voice_client = interaction.guild.voice_client
         voice_client.stop()
 
-        self.clear_playList(self)
+        self.clear_playList()
 
         await voice_channel.send("플레이리스트를 초기화 했습니다.")
 
