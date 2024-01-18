@@ -175,7 +175,7 @@ class music(commands.Cog):
 
                         source = discord.PCMVolumeTransformer(FFmpegPCMAudio(music_name))
                         self.now_music_name = music_name
-                        voice_client.play(source, after=after_play)
+                        await voice_client.play(source, after=after_play)
                         voice_client.source.volume = self.volume / 100
                         target_channel = self.bot.get_channel(self.target_channel_id)
                         await target_channel.send("**"+ name +"**이 추가한 **" + music_name.split('/')[1] + "** 을 재생합니다.")
@@ -185,7 +185,7 @@ class music(commands.Cog):
 
                 source = discord.PCMVolumeTransformer(FFmpegPCMAudio(music_name))
                 self.now_music_name = music_name
-                voice_client.play(source, after=after_play)
+                await voice_client.play(source, after=after_play)
                 voice_client.source.volume = self.volume / 100
                 target_channel = self.bot.get_channel(self.target_channel_id)
                 await target_channel.send("**"+ name +"**이 추가한 **" + music_name.split('/')[1] + "** 을 재생합니다.")
