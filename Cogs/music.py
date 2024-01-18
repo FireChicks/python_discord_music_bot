@@ -191,7 +191,7 @@ class music(commands.Cog):
                 self.queue = queue.Queue()
                 await self.send_music_info("음성채널에 연결되어있지 않습니다.")
 
-    def after_play(self, guild):
+    async def after_play(self, guild):
         # 재생이 끝난 음성 파일을 제거하고 다음 메시지를 재생합니다.
         que = self.queue.get()
         music_name = que['path']
