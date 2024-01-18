@@ -155,6 +155,7 @@ class music(commands.Cog):
             await voice_client.move_to(voice_channel)
         else:
             voice_client = await voice_channel.connect()
+        voice_client.stop()
 
         if not self.queue.empty():
             que = self.queue.get()
@@ -164,9 +165,6 @@ class music(commands.Cog):
             music_name = que['path']
 
             if voice_channel:  # 채널 연결여부 확인
-                if not voice_client or not voice_client.is_connected():
-                    voice_client = await voice_channel.connect()
-
                 def after_play(error):
                     if error:
                         print(f"오류 발생: {error}")
