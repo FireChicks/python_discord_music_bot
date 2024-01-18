@@ -21,6 +21,7 @@ class music(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
         self.target_channel_id = 789084495584165899  # 명령어를 받을 채널
+        self.target_channel = bot.get_channel(self.target_channel_id)
         self.queue = queue.Queue()
         self.now_music_name = ''
         self.found_files = []
@@ -146,9 +147,11 @@ class music(commands.Cog):
             await message.channel.send("오류가 발생했습니다. 자세한 로그를 확인하세요.")
             print(f"다운로드 오류: {e}")
 
-    async def play_next_music(self, guild, interaction: Interaction):
+    async def play_next_music(self, guild):
         if self.queue.qsize() == 1 and not guild.voice_client.is_playing(): #첫 노래고 재생이 안되고 있을 때
-            music_name = self.queue.get()['path']
+            que = self.queue.get()
+            name = que['author']
+            music_name = que['path']
             voice_channel = guild.me.voice.channel
             voice_client = guild.voice_client
 
@@ -161,12 +164,14 @@ class music(commands.Cog):
                         print(f"오류 발생: {error}")
 
                     if not self.queue.empty():
-                        music_name = self.queue.get()['path']
+                        que = self.queue.get()
+                        music_name = que['path']
+                        name = que['author']
                         source = discord.PCMVolumeTransformer(FFmpegPCMAudio(music_name))
                         self.now_music_name = music_name
                         voice_client.play(source, after=after_play)  # 수정된 부분
                         voice_client.source.volume = self.volume / 100
-                        await interaction.response.send_message("**" + music_name + "** 을 재생합니다.")
+                        await self.target_channel.send("**"+ name +"**이 추가한 **" + music_name + "** 을 재생합니다.")
                     else:
                         # 큐가 비어있으면 Bot을 음소거 해제합니다.
                         guild.me.edit(deafen=False)
@@ -175,7 +180,7 @@ class music(commands.Cog):
                 self.now_music_name = music_name
                 voice_client.play(source, after=after_play)  # 수정된 부분
                 voice_client.source.volume = self.volume / 100
-                await interaction.response.send_message("**" + music_name + "** 을 재생합니다.")
+                await self.target_channel.send("**"+ name +"**이 추가한 **" + music_name + "** 을 재생합니다.")
             else:
                 self.queue = queue.Queue()
                 await guild.text_channels[0].send("음성 채널에 연결되어 있지 않습니다.")
