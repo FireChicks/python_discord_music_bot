@@ -164,7 +164,7 @@ class music(commands.Cog):
                 if not voice_client or not voice_client.is_connected():
                     voice_client = await voice_channel.connect()
 
-                async def after_play(error):
+                def after_play(error):
                     if error:
                         print(f"오류 발생: {error}")
 
