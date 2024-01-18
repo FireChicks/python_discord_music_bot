@@ -157,7 +157,8 @@ class music(commands.Cog):
             await voice_client.move_to(voice_channel)
         else:
             voice_client = await voice_channel.connect()
-        if not self.queue.empty():  # 첫 노래고 재생이 안되고 있을 때
+
+        if not self.queue.empty() and not not voice_client.is_playing():
             que = self.queue.get()
             # 신청한 사람
             name = str(que['author'])
