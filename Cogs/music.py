@@ -164,22 +164,9 @@ class music(commands.Cog):
                 if not voice_client or not voice_client.is_connected():
                     voice_client = await voice_channel.connect()
 
-                def after_play(error):
-                    if error:
-                        print(f"오류 발생: {error}")
-
-                    if not self.queue.empty():
-                        music_name = self.queue.get()['path']
-                        source = discord.PCMVolumeTransformer(FFmpegPCMAudio(music_name))
-                        self.now_music_name = music_name
-                        voice_client.play(source, after=after_play)  # 수정된 부분
-                        voice_client.source.volume = self.volume / 100
-                    else:
-                        print('더이상 재생할 노래가 없습니다.')
-
                 source = discord.PCMVolumeTransformer(FFmpegPCMAudio(music_name))
                 self.now_music_name = music_name
-                voice_client.play(source, after=after_play)  # 수정된 부분
+                voice_client.play(source, after=self.after_play)  # 수정된 부분
                 voice_client.source.volume = self.volume / 100
             else:
                 self.queue = queue.Queue()
