@@ -266,8 +266,12 @@ class music(commands.Cog):
         return found_files
 
     def clear_playList(self):
-        if not self.queue.empty():
-            self.queue.get()
+        is_empty = True
+        while(is_empty):
+            if not self.queue.empty():
+                self.queue.get()
+            else:
+                is_empty = False
         self.now_music_name = ''
         self.volume = 50
 
