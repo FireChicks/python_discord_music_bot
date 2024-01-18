@@ -162,29 +162,11 @@ class music(commands.Cog):
 
             if voice_channel:   #채널 연결여부 확인
                 if not voice_client or not voice_client.is_connected():
-                    voice_client = await voice_channel.connect()
-
-                def after_play(error):
-                    if error:
-                        print(f"오류 발생: {error}")
-
-                    if not self.queue.empty():
-                        que = self.queue.get()
-                        music_name = que['path']
-                        name = str(que['author'])
-
-                        source = discord.PCMVolumeTransformer(FFmpegPCMAudio(music_name))
-                        self.now_music_name = music_name
-                        voice_client.play(source, after=after_play)
-                        voice_client.source.volume = self.volume / 100
-                        target_channel = self.bot.get_channel(self.target_channel_id)
-                        await target_channel.send("**"+ name +"**이 추가한 **" + music_name.split('/')[1] + "** 을 재생합니다.")
-                    else:
-                        guild.me.edit(deafen=False)
+                    voice_client = await voice_channel.connect
 
                 source = discord.PCMVolumeTransformer(FFmpegPCMAudio(music_name))
                 self.now_music_name = music_name
-                voice_client.play(source, after=after_play)
+                voice_client.play(source, after=lambda e: asyncio.create_task(self.after_play(guild)))
                 voice_client.source.volume = self.volume / 100
                 target_channel = self.bot.get_channel(self.target_channel_id)
                 await target_channel.send("**"+ name +"**이 추가한 **" + music_name.split('/')[1] + "** 을 재생합니다.")
