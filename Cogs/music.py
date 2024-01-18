@@ -151,16 +151,22 @@ class music(commands.Cog):
             print(f"다운로드 오류: {e}")
 
     async def play_next_music(self, guild):
-        if self.queue.qsize() == 1 and not guild.voice_client.is_playing():  # 첫 노래고 재생이 안되고 있을 때
+        voice_channel = guild.me.voice.channel
+        voice_client = guild.voice_client
+        if voice_client is not None and voice_client.is_connected():
+            await voice_client.move_to(voice_channel)
+        else:
+            voice_client = await voice_channel.connect()
+        if not self.queue.empty():  # 첫 노래고 재생이 안되고 있을 때
             que = self.queue.get()
             # 신청한 사람
             name = str(que['author'])
             # 노래 이름
             music_name = que['path']
-            voice_channel = guild.me.voice.channel
-            voice_client = guild.voice_client
 
             if voice_channel:  # 채널 연결여부 확인
+                voice_client.stop()
+
                 if not voice_client or not voice_client.is_connected():
                     voice_client = await voice_channel.connect()
 
@@ -183,6 +189,7 @@ class music(commands.Cog):
                 voice_client.source.volume = self.volume / 100
             else:
                 self.queue = queue.Queue()
+        else:
 
     async def send_music_info(self, str):
         target_channel = self.bot.get_channel(self.target_channel_id)
