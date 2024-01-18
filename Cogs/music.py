@@ -164,8 +164,6 @@ class music(commands.Cog):
             music_name = que['path']
 
             if voice_channel:  # 채널 연결여부 확인
-                voice_client.stop()
-
                 if not voice_client or not voice_client.is_connected():
                     voice_client = await voice_channel.connect()
 
@@ -354,6 +352,7 @@ class music(commands.Cog):
         voice_client = interaction.guild.voice_client
         if self.queue.qsize() > 0:
             await self.play_next_music(interaction.guild)
+            await interaction.delete_original_message()
         else :
             await interaction.response.send_message("현재 플레이리스트에 다음 노래가 없습니다.")
 
