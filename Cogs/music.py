@@ -206,7 +206,7 @@ class music(commands.Cog):
             self.now_music_name = music_name
             voice_client.play(source, after=lambda e: self.after_play(e))
             voice_client.source.volume = self.volume / 100
-            await target_channel.send("**"+ name +"++가 추가한 다음 노래 **" + music_name.split('/')[1].split('.')[0] + "**가 재생됩니다.")
+            await target_channel.send("**"+ name +"**가 추가한 다음 노래 **" + music_name.split('/')[1].split('.')[0] + "**가 재생됩니다.")
         else:
             # 큐가 비어있으면 Bot을 음소거 해제합니다.
             await target_channel.send("다음 노래가 없습니다.")
