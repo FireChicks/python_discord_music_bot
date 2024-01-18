@@ -176,7 +176,7 @@ class music(commands.Cog):
                         voice_client.source.volume = self.volume / 100
                         target_channel = self.bot.get_channel(self.target_channel_id)
                         str = "**" + name + "**가 추가한 다음 노래 **" + music_name.split('/')[1].split('.')[0] + "**가 재생됩니다."
-                        await self.send_music_info(str)
+                        self.send_music_info(str)
                     else:
                         # 큐가 비어있으면 Bot을 음소거 해제합니다.
                         guild.me.edit(deafen=False)
@@ -204,9 +204,9 @@ class music(commands.Cog):
             voice_client.play(source, after=self.after_play)
             voice_client.source.volume = self.volume / 100
             str = "**" + name + "**가 추가한 다음 노래 **" + music_name.split('/')[1].split('.')[0] + "**가 재생됩니다."
-            await self.send_music_info(str)
+            self.send_music_info(str)
         else:
-            await self.send_music_info("더이상 재생할 노래가 없습니다.")
+            self.send_music_info("더이상 재생할 노래가 없습니다.")
 
 
     async def send_music_info(self, str):
