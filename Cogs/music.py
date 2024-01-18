@@ -150,7 +150,7 @@ class music(commands.Cog):
         if self.queue.qsize() == 1 and not guild.voice_client.is_playing(): #첫 노래고 재생이 안되고 있을 때
             que = self.queue.get()
             #신청한 사람
-            name = que['author']
+            name = str(que['author'])
             #노래 이름
             music_name = que['path']
             voice_channel = guild.me.voice.channel
@@ -167,7 +167,7 @@ class music(commands.Cog):
                     if not self.queue.empty():
                         que = self.queue.get()
                         music_name = que['path']
-                        name = que['author']
+                        name = str(que['author'])
                         source = discord.PCMVolumeTransformer(FFmpegPCMAudio(music_name))
                         self.now_music_name = music_name
                         voice_client.play(source, after=after_play)  # 수정된 부분
