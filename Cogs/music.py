@@ -196,6 +196,7 @@ class music(commands.Cog):
         name = que['author']
         if not self.queue.empty():
             voice_client = guild.voice_client
+            voice_client.stop()
             source = discord.PCMVolumeTransformer(FFmpegPCMAudio(music_name))
             self.now_music_name = music_name
             voice_client.play(source, after=lambda e: self.after_play(e))
@@ -363,7 +364,6 @@ class music(commands.Cog):
 
         voice_client = interaction.guild.voice_client
         if voice_client.is_playing() and self.queue.qsize() > 0:
-            voice_client.stop()
             await self.after_play(interaction.guild)
         else :
             await interaction.response.send_message("현재 플레이리스트에 다음 노래가 없습니다.")
@@ -492,7 +492,6 @@ class music(commands.Cog):
                 voice_client = await voice_channel.connect()
 
             if self.queue.qsize() > 0 :
-                voice_client.stop()
                 self.after_play(interaction.guild)
             else :
                 await interaction.response.send_message("플레이리스트에 다음 노래가 없습니다.",view=view)
