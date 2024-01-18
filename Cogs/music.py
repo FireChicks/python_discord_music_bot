@@ -195,7 +195,6 @@ class music(commands.Cog):
 
     async def send_music_info(self, str):
         target_channel = self.bot.get_channel(self.target_channel_id)
-        print(str+"을 전송하겠습니다.")
         await target_channel.send(str)
 
     def makePlayList(self):
