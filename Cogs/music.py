@@ -158,6 +158,7 @@ class music(commands.Cog):
 
         if voice_client.is_playing:
             voice_client.stop()
+            print('노래 정지')
             return
 
         if not self.queue.empty():
