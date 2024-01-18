@@ -175,7 +175,8 @@ class music(commands.Cog):
                         voice_client.play(source, after=after_play)  # 수정된 부분
                         voice_client.source.volume = self.volume / 100
                         target_channel = self.bot.get_channel(self.target_channel_id)
-                        await target_channel.send("**" + name + "**이 추가한 **" + music_name.split('/')[1] + "** 을 재생합니다.")
+                        str = "**" + name + "**가 추가한 다음 노래 **" + music_name.split('/')[1].split('.')[0] + "**가 재생됩니다."
+                        await self.send_music_info(str)
                     else:
                         # 큐가 비어있으면 Bot을 음소거 해제합니다.
                         guild.me.edit(deafen=False)
@@ -186,14 +187,14 @@ class music(commands.Cog):
                 voice_client.source.volume = self.volume / 100
             else:
                 self.queue = queue.Queue()
-                await guild.text_channels[0].send("음성 채널에 연결되어 있지 않습니다.")
+                await self.send_music_info("음성채널에 연결되어있지 않습니다.")
 
-    async def after_play(self, guild):
+    def after_play(self, guild):
         # 재생이 끝난 음성 파일을 제거하고 다음 메시지를 재생합니다.
         que = self.queue.get()
         music_name = que['path']
         name = que['author']
-        target_channel = self.bot.get_channel(self.target_channel_id)
+
 
         if not self.queue.empty():
             voice_client = guild.voice_client
@@ -202,10 +203,15 @@ class music(commands.Cog):
             self.now_music_name = music_name
             voice_client.play(source, after=self.after_play)
             voice_client.source.volume = self.volume / 100
-            await target_channel.send(
-                "**" + name + "**가 추가한 다음 노래 **" + music_name.split('/')[1].split('.')[0] + "**가 재생됩니다.")
+            str = "**" + name + "**가 추가한 다음 노래 **" + music_name.split('/')[1].split('.')[0] + "**가 재생됩니다."
+            await self.send_music_info(str)
         else:
-            await target_channel.send("다음 노래가 없습니다.")
+            await self.send_music_info("더이상 재생할 노래가 없습니다.")
+
+
+    async def send_music_info(self, str):
+        target_channel = self.bot.get_channel(self.target_channel_id)
+        await target_channel.send( str)
 
     def makePlayList(self):
         count = 0
