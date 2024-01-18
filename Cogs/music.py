@@ -151,7 +151,7 @@ class music(commands.Cog):
             print(f"다운로드 오류: {e}")
 
     async def play_next_music(self, guild):
-        if self.queue.qsize() == 1 and not guild.voice_client.is_playing(): #첫 노래고 재생이 안되고 있을 때
+        if not guild.voice_client.is_playing(): #첫 노래고 재생이 안되고 있을 때
             que = self.queue.get()
             #신청한 사람
             name = str(que['author'])
