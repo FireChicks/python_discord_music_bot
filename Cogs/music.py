@@ -218,10 +218,7 @@ class music(commands.Cog):
             table = '플레이리스트를 출력합니다.\n'
 
             # |---------------------| 최대크기만큼 생성 코드
-            tempStr = '|'
-            for i in range(0, maxLength + 10):
-                tempStr += '-'
-            tempStr += '|\n'
+            tempStr = '|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|\n'
 
             table += tempStr         # |---------------------|
             table += temp_play_list  # |1.노래명        |추가자|
@@ -390,6 +387,8 @@ class music(commands.Cog):
             for file_name in self.found_files :
                 queue_part = {'path': self.downloadPath + file_name, 'author': interaction.user.name}
                 self.queue.put(queue_part)
+
+            await interaction.response.send_message("성공적으로 **"+ count +"**개의 노래를 추가했습니다.")
 
             if self.queue.qsize() == 1:  # 큐가 비어있으면 재생 시작
                 await self.play_next_music(interaction.guild)
