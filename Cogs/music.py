@@ -95,7 +95,7 @@ class music(commands.Cog):
         elif message.content.startswith("https://youtu.be/"):
             url = message.content.split("https://youtu.be/")[1]
 
-        #이미 있던 링크라서 재생시간이 들어있을 경우
+        # 이미 있던 링크라서 재생시간이 들어있을 경우
         if "&t=" in url:
             split_result = url.split("&t=")
             url = split_result[0]
@@ -107,7 +107,7 @@ class music(commands.Cog):
         option = {
             'format': 'bestaudio/best',
             'outtmpl': "downloads/%(id)s",  # 다운로드 디렉토리와 파일명 형식을 설정합니다.
-            'yes-playlist' : False,
+            'yes-playlist': False,
             'ignoreerrors': True,
             'nooverwrites': True,
             'postprocessors': [{
@@ -118,7 +118,7 @@ class music(commands.Cog):
         }
         try:
             with yt_dlp.YoutubeDL(option) as ydl:
-                info = ydl.extract_info(url, download=False)
+                info = await asyncio.to_thread(ydl.extract_info, url, download=False)
                 title = sub.sanitize_filename(info["title"] + ".mp3")
                 fileName = info["id"] + ".mp3"
                 await message.channel.send("**" + title + "** 을 플레이리스트에 추가하겠습니다")
@@ -130,16 +130,16 @@ class music(commands.Cog):
                         print("이미 다운로드되어 있는 노래입니다.")
 
                 if isAvailable:
-                    ydl.download([url])  # 파일을 다운로드합니다.
-                    sub.rename_files(self.downloadPath, fileName, title)  # id로 된 파일명 변경
+                    await asyncio.to_thread(ydl.download, [url])  # 파일을 다운로드합니다.
+                    await asyncio.to_thread(sub.rename_files, self.downloadPath, fileName, title)  # id로 된 파일명 변경
             queue_part = {'path': self.downloadPath + title, 'author': message.author}
             self.queue.put(queue_part)  # 플레이리스트에 노래 파일명, 추가한 사람 추가
             await message.channel.send("**" + title + "** 을 성공적으로 플레이리스트에 추가하였습니다")
 
-            if self.queue.qsize() == 1 : #큐가 비어있으면 재생 시작
+            if self.queue.qsize() == 1:  # 큐가 비어있으면 재생 시작
                 await self.play_next_music(message.guild)
 
-            elif not message.voice_client.is_playing() and self.queue.qsize() != 0 :
+            elif not message.voice_client.is_playing() and self.queue.qsize() != 0:
                 await self.after_play(message.guild)
 
         except yt_dlp.utils.DownloadError as e:
