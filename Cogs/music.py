@@ -182,7 +182,7 @@ class music(commands.Cog):
             voice_client.stop()
             source = discord.PCMVolumeTransformer(FFmpegPCMAudio(music_name))
             self.now_music_name = music_name
-            voice_client.play(source, after=self.after_play)
+            voice_client.play(source, after=self.after_play(guild))
             voice_client.source.volume = self.volume / 100
         else:
             print('더이상 재생할 노래가 없습니다.')
