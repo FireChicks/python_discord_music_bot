@@ -380,7 +380,7 @@ class music(commands.Cog):
 
             await interaction.response.send_message("성공적으로 **"+ str(count) +"**개의 노래를 추가했습니다.")
 
-            if self.queue.qsize() == count:  # 큐가 비어있으면 재생 시작
+            if self.queue.qsize() == count and not voice_client.is_playing():  # 큐가 비어있으면 재생 시작
                 await self.play_next_music(interaction.guild)
         else:
             await interaction.response.send_message("추가할 노래의 개수는 0보다 크고 30보다 작아야 합니다.")
