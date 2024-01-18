@@ -383,7 +383,7 @@ class music(commands.Cog):
         except ValueError as e:
             await interaction.response.send_message("추가할 노래의 개수를 입력해주세요.")
             count = 0
-        if count > 0:
+        if 30 >= count > 0:
 
             self.found_files = self.search_random_music(count)
             member: Member = interaction.user
@@ -394,13 +394,10 @@ class music(commands.Cog):
                 queue_part = {'path': self.downloadPath + file_name, 'author': interaction.user.name}
                 self.queue.put(queue_part)
 
-            if self.queue.qsize() == 1:  # 큐가 비어있으면 재생 시작
-                await self.play_next_music(interaction.guild)
+            await self.play_next_music(interaction.guild)
 
-            elif not voice_client.is_playing() and self.queue.qsize() != 0:
-                await self.after_play(interaction.guild)
         else:
-            await interaction.response.send_message("추가할 노래의 개수는 0보다 커야합니다.")
+            await interaction.response.send_message("추가할 노래의 개수는 0보다 크고 30보다 작아야 합니다.")
 
     @app_commands.command(
         name="컨트롤",
