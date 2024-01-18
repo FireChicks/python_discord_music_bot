@@ -155,7 +155,10 @@ class music(commands.Cog):
             await voice_client.move_to(voice_channel)
         else:
             voice_client = await voice_channel.connect()
-        voice_client.stop()
+
+        if voice_client.is_playing:
+            voice_client.stop()
+            return
 
         if not self.queue.empty():
             que = self.queue.get()
