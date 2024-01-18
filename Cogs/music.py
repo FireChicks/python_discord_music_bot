@@ -166,7 +166,7 @@ class music(commands.Cog):
 
                 source = discord.PCMVolumeTransformer(FFmpegPCMAudio(music_name))
                 self.now_music_name = music_name
-                voice_client.play(source, after=self.after_play)  # 수정된 부분
+                voice_client.play(source, after=self.after_play(guild))  # 수정된 부분
                 voice_client.source.volume = self.volume / 100
             else:
                 self.queue = queue.Queue()
