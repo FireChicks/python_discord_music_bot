@@ -1,4 +1,5 @@
 import queue
+import random
 import time
 import discord
 from functools import partial
@@ -165,6 +166,7 @@ class music(commands.Cog):
                         self.now_music_name = music_name
                         voice_client.play(source, after=after_play)  # 수정된 부분
                         voice_client.source.volume = self.volume / 100
+                        await guild.text_channels[0].send("**" + music_name + "** 을 재생합니다.")
                     else:
                         # 큐가 비어있으면 Bot을 음소거 해제합니다.
                         guild.me.edit(deafen=False)
@@ -173,6 +175,7 @@ class music(commands.Cog):
                 self.now_music_name = music_name
                 voice_client.play(source, after=after_play)  # 수정된 부분
                 voice_client.source.volume = self.volume / 100
+                await guild.text_channels[0].send("**" + music_name + "** 을 재생합니다.")
             else:
                 self.queue = queue.Queue()
                 await guild.text_channels[0].send("음성 채널에 연결되어 있지 않습니다.")
@@ -249,6 +252,23 @@ class music(commands.Cog):
 
         return found_files
 
+    def search_random_music(self, count):
+        found_files = []
+
+        if count > 0:
+            all_files = os.listdir(self.downloadPath)
+
+            # Shuffle the list of files randomly
+            random.shuffle(all_files)
+
+            # Ensure count does not exceed the total number of files
+            count = min(count, len(all_files))
+
+            # Add the first 'count' filenames to found_files
+            found_files.extend(all_files[:count])
+
+        return found_files
+
     def clear_playList(self):
         if not self.queue.empty():
             self.queue.get()
@@ -293,7 +313,7 @@ class music(commands.Cog):
         await ctx.send(f"Changed volume to {volume}%")
 
     @app_commands.command(
-        name="검색",
+        name="search",
         description="다운로드 받은 노래들을 검색합니다."
     )
     async def search_music_by_btn(self, interaction: discord.Interaction, search_text: str) -> None:
@@ -343,6 +363,30 @@ class music(commands.Cog):
         else :
             await interaction.response.send_message(
                 "현재 플레이리스트에 다음 노래가 없습니다.")
+
+    @app_commands.command(
+        name="random",
+        description="랜덤으로 노래를 추가합니다."
+    )
+    async def random_append_music(self, interaction: discord.Interaction, count: str) -> None:
+        if count >= 0:
+
+            self.found_files = self.search_random_music(count)
+            member: Member = interaction.user
+            voice_channel: VoiceChannel = member.voice.channel
+            voice_client = interaction.guild.voice_client
+
+            for file_name in self.found_files :
+                queue_part = {'path': self.downloadPath + file_name, 'author': interaction.user.name}
+                self.queue.put(queue_part)
+
+            if self.queue.qsize() == 1:  # 큐가 비어있으면 재생 시작
+                await self.play_next_music(interaction.guild)
+
+            elif not voice_client.is_playing() and self.queue.qsize() != 0:
+                await self.after_play(interaction.guild)
+        else:
+            await interaction.response.send_message("추가할 노래의 개수는 0보다 커야합니다.")
 
     @app_commands.command(
         name="컨트롤",
