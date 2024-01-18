@@ -144,7 +144,7 @@ class music(commands.Cog):
                 await self.play_next_music(message.guild)
 
             elif not voice_client.is_playing() and self.queue.qsize() != 0:
-                await self.after_play(message.guild)
+                await self.play_next_music(message.guild)
 
         except yt_dlp.utils.DownloadError as e:
             await message.channel.send("오류가 발생했습니다. 자세한 로그를 확인하세요.")
@@ -164,29 +164,25 @@ class music(commands.Cog):
                 if not voice_client or not voice_client.is_connected():
                     voice_client = await voice_channel.connect()
 
+                def after_play(error):
+                    if error:
+                        print(f"오류 발생: {error}")
+
+                    if not self.queue.empty():
+                        music_name = self.queue.get()['path']
+                        source = discord.PCMVolumeTransformer(FFmpegPCMAudio(music_name))
+                        self.now_music_name = music_name
+                        voice_client.play(source, after=after_play)
+                        voice_client.source.volume = self.volume / 100
+                    else:
+                        print('모든 노래 재생 완료')
+
                 source = discord.PCMVolumeTransformer(FFmpegPCMAudio(music_name))
                 self.now_music_name = music_name
-                voice_client.play(source, after=self.after_play(guild))  # 수정된 부분
+                voice_client.play(source, after=after_play)
                 voice_client.source.volume = self.volume / 100
             else:
                 self.queue = queue.Queue()
-                await self.send_music_info("음성채널에 연결되어있지 않습니다.")
-
-    def after_play(self, guild):
-        if not self.queue.empty():
-            que = self.queue.get()
-            music_name = que['path']
-            name = str(que['author'])
-
-            voice_client = guild.voice_client
-            voice_client.stop()
-            source = discord.PCMVolumeTransformer(FFmpegPCMAudio(music_name))
-            self.now_music_name = music_name
-            voice_client.play(source, after=self.after_play(guild))
-            voice_client.source.volume = self.volume / 100
-        else:
-            print('더이상 재생할 노래가 없습니다.')
-
 
     async def send_music_info(self, str):
         target_channel = self.bot.get_channel(self.target_channel_id)
@@ -334,7 +330,7 @@ class music(commands.Cog):
                             await self.play_next_music(interaction.guild)
 
                         elif not voice_client.is_playing() and self.queue.qsize() != 0:
-                            await self.after_play(interaction.guild)
+                            await self.play_next_music(message.guild)
                     btnSong.callback = partial(btn_song_callback, songName = i[1])
                     view.add_item(btnSong)
                 await interaction.response.send_message(f"**{search_text}**의 검색 결과.", view=view)
@@ -353,7 +349,7 @@ class music(commands.Cog):
 
         voice_client = interaction.guild.voice_client
         if self.queue.qsize() > 0:
-            await self.after_play(interaction.guild)
+            await self.play_next_music(interaction.guild)
         else :
             await interaction.response.send_message("현재 플레이리스트에 다음 노래가 없습니다.")
 
@@ -383,7 +379,7 @@ class music(commands.Cog):
             if self.queue.qsize() == count:  # 큐가 비어있으면 재생 시작
                 await self.play_next_music(interaction.guild)
             elif not voice_client.is_playing() and self.queue.qsize() != 0:
-                await self.after_play(interaction.guild)
+                await self.play_next_music(interaction.guild)
         else:
             await interaction.response.send_message("추가할 노래의 개수는 0보다 크고 30보다 작아야 합니다.")
 
@@ -480,7 +476,7 @@ class music(commands.Cog):
                 voice_client = await voice_channel.connect()
 
             if self.queue.qsize() > 0 :
-                self.after_play(interaction.guild)
+                await self.play_next_music(interaction.guild)
             else :
                 await interaction.response.send_message("플레이리스트에 다음 노래가 없습니다.",view=view)
 
@@ -536,7 +532,7 @@ class music(commands.Cog):
                     await self.play_next_music(interaction.guild)
 
                 elif not voice_client.is_playing() and self.queue.qsize() != 0:
-                    await self.after_play(interaction.guild)
+                    await self.play_next_music(interaction.guild)
 
             else:
                 await interaction.response.send_message("유효한 번호를 입력해주세요.")
