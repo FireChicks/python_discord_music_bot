@@ -189,7 +189,6 @@ class music(commands.Cog):
                 voice_client.source.volume = self.volume / 100
             else:
                 self.queue = queue.Queue()
-        else:
 
     async def send_music_info(self, str):
         target_channel = self.bot.get_channel(self.target_channel_id)
