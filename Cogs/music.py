@@ -363,7 +363,6 @@ class music(commands.Cog):
         if voice_client.is_playing() and self.queue.qsize() > 0:
             voice_client.stop()
             await self.play_next_music(interaction.guild)
-            await interaction.response.send_message("**"+ self.queue.queue[0]['author'] +"**이(가) 신청한 다음 노래 **" + self.queue.queue[0]['path'].split('/')[1].split('.mp3')[0].strip('.mp3') + "**를 재생합니다")
         else :
             await interaction.response.send_message("현재 플레이리스트에 다음 노래가 없습니다.")
 
