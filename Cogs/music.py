@@ -150,7 +150,9 @@ class music(commands.Cog):
     async def play_next_music(self, guild):
         if self.queue.qsize() == 1 and not guild.voice_client.is_playing(): #첫 노래고 재생이 안되고 있을 때
             que = self.queue.get()
+            #신청한 사람
             name = que['author']
+            #노래 이름
             music_name = que['path']
             voice_channel = guild.me.voice.channel
             voice_client = guild.voice_client
