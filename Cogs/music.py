@@ -192,7 +192,7 @@ class music(commands.Cog):
         # 재생이 끝난 음성 파일을 제거하고 다음 메시지를 재생합니다.
         que = self.queue.get()
         music_name = que['path']
-        name = que['author']
+        name = str(que['author'])
 
 
         if not self.queue.empty():
@@ -210,7 +210,8 @@ class music(commands.Cog):
 
     async def send_music_info(self, str):
         target_channel = self.bot.get_channel(self.target_channel_id)
-        await target_channel.send( str)
+        print(str+"을 전송하겠습니다.")
+        await target_channel.send(str)
 
     def makePlayList(self):
         count = 0
