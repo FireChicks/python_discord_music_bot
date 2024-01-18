@@ -143,8 +143,6 @@ class music(commands.Cog):
             if self.queue.qsize() == 1:  # 큐가 비어있으면 재생 시작
                 await self.play_next_music(message.guild)
 
-            elif not voice_client.is_playing() and self.queue.qsize() != 0:
-                await self.play_next_music(message.guild)
 
         except yt_dlp.utils.DownloadError as e:
             await message.channel.send("오류가 발생했습니다. 자세한 로그를 확인하세요.")
@@ -158,7 +156,7 @@ class music(commands.Cog):
         else:
             voice_client = await voice_channel.connect()
 
-        if not self.queue.empty() and not not voice_client.is_playing():
+        if not self.queue.empty():
             que = self.queue.get()
             # 신청한 사람
             name = str(que['author'])
@@ -337,9 +335,6 @@ class music(commands.Cog):
 
                         if self.queue.qsize() == 1:  # 큐가 비어있으면 재생 시작
                             await self.play_next_music(interaction.guild)
-
-                        elif not voice_client.is_playing() and self.queue.qsize() != 0:
-                            await self.play_next_music(message.guild)
                     btnSong.callback = partial(btn_song_callback, songName = i[1])
                     view.add_item(btnSong)
                 await interaction.response.send_message(f"**{search_text}**의 검색 결과.", view=view)
@@ -386,8 +381,6 @@ class music(commands.Cog):
             await interaction.response.send_message("성공적으로 **"+ str(count) +"**개의 노래를 추가했습니다.")
 
             if self.queue.qsize() == count:  # 큐가 비어있으면 재생 시작
-                await self.play_next_music(interaction.guild)
-            elif not voice_client.is_playing() and self.queue.qsize() != 0:
                 await self.play_next_music(interaction.guild)
         else:
             await interaction.response.send_message("추가할 노래의 개수는 0보다 크고 30보다 작아야 합니다.")
@@ -538,9 +531,6 @@ class music(commands.Cog):
                     await interaction.response.send_massage("먼저 보이스채널에 접속해주세요")
 
                 if self.queue.qsize() == 1:  # 큐가 비어있으면 재생 시작
-                    await self.play_next_music(interaction.guild)
-
-                elif not voice_client.is_playing() and self.queue.qsize() != 0:
                     await self.play_next_music(interaction.guild)
 
             else:
