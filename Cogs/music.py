@@ -488,11 +488,8 @@ class music(commands.Cog):
             if voice_client is None or not voice_client.is_connected():
                 voice_client = await voice_channel.connect()
 
-            voice_client.stop()
             if self.queue.qsize() > 0 :
-                await interaction.response.send_message(
-                    "다음 노래 **" + self.queue.queue[0]['path'].split('/')[1].split('.mp3')[0].strip('.mp3') + "**를 재생합니다.",
-                    view=view)
+                self.after_play(interaction.guild)
             else :
                 await interaction.response.send_message("플레이리스트에 다음 노래가 없습니다.",view=view)
 
