@@ -156,12 +156,11 @@ class music(commands.Cog):
         else:
             voice_client = await voice_channel.connect()
 
-        if voice_client.is_playing:
-            voice_client.stop()
-            print('노래 정지')
-            return
-
         if not self.queue.empty():
+            if voice_client.is_playing():
+                voice_client.stop()
+                print('노래 정지')
+                return
             que = self.queue.get()
             # 신청한 사람
             name = str(que['author'])
