@@ -211,7 +211,7 @@ class music(commands.Cog):
             temp_play_list = ''
             for i in self.queue.queue:
                 count += 1
-                temp_play_list += f'{count}. **{str(i["path"]).split("/")[1]}**/ *{str(i["author"])}*\n'
+                temp_play_list += f'{count}. **{str(i["path"]).split("/")[1].split(".")[0]}**/ *{str(i["author"])}*\n'
                 if len(temp_play_list) > maxLength:
                     maxLength = len(temp_play_list)
 
@@ -361,8 +361,8 @@ class music(commands.Cog):
 
         voice_client = interaction.guild.voice_client
         if voice_client.is_playing() and self.queue.qsize() > 0:
-            await interaction.response.send_message("다음 노래 **" + self.queue.queue[0]['path'].split('/')[1].split('.mp3')[0].strip('.mp3') + "**를 재생합니다")
-            voice_client.stop()
+            self.after_play(interaction.guild)
+            await interaction.response.send_message("**"+ self.queue.queue[0]['author'] +"**가 신청한 다음 노래 **" + self.queue.queue[0]['path'].split('/')[1].split('.mp3')[0].strip('.mp3') + "**를 재생합니다")
         else :
             await interaction.response.send_message(
                 "현재 플레이리스트에 다음 노래가 없습니다.")
