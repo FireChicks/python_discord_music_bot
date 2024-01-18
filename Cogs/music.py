@@ -189,10 +189,7 @@ class music(commands.Cog):
                 self.queue = queue.Queue()
                 await guild.text_channels[0].send("음성 채널에 연결되어 있지 않습니다.")
 
-    async def after_play(self,guild, error):
-        if error:
-            print(f"오류 발생: {error}")
-
+    async def after_play(self,guild):
         # 재생이 끝난 음성 파일을 제거하고 다음 메시지를 재생합니다.
         music_name = self.queue.get()['path']
         if not self.queue.empty():
@@ -383,7 +380,7 @@ class music(commands.Cog):
         except ValueError as e:
             await interaction.response.send_message("추가할 노래의 개수를 입력해주세요.")
             count = 0
-        if 30 >= count > 0:
+        if 30 >= count and count > 0:
 
             self.found_files = self.search_random_music(count)
             member: Member = interaction.user
@@ -394,8 +391,11 @@ class music(commands.Cog):
                 queue_part = {'path': self.downloadPath + file_name, 'author': interaction.user.name}
                 self.queue.put(queue_part)
 
-            await self.play_next_music(interaction.guild)
+            if self.queue.qsize() == 1:  # 큐가 비어있으면 재생 시작
+                await self.play_next_music(interaction.guild)
 
+            elif not voice_client.is_playing() and self.queue.qsize() != 0:
+                await self.after_play(interaction.guild)
         else:
             await interaction.response.send_message("추가할 노래의 개수는 0보다 크고 30보다 작아야 합니다.")
 
