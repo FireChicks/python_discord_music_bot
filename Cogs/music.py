@@ -140,7 +140,7 @@ class music(commands.Cog):
             self.queue.put(queue_part)  # 플레이리스트에 노래 파일명, 추가한 사람 추가
             await message.channel.send("**" + title + "** 을 성공적으로 플레이리스트에 추가하였습니다")
 
-            if self.queue.qsize() == 1:  # 큐가 비어있으면 재생 시작
+            if self.queue.qsize() == 1 and not voice_client.is_playing():  # 큐가 비어있으면 재생 시작
                 await self.play_next_music(message.guild)
 
 
@@ -333,7 +333,7 @@ class music(commands.Cog):
                         self.queue.put(queue_part)
                         await interaction.response.send_message("성공적으로 노래 **" + songName + "**를 추가하였습니다.")
 
-                        if self.queue.qsize() == 1:  # 큐가 비어있으면 재생 시작
+                        if self.queue.qsize() == 1 and not voice_client.is_playing():  # 큐가 비어있으면 재생 시작
                             await self.play_next_music(interaction.guild)
                     btnSong.callback = partial(btn_song_callback, songName = i[1])
                     view.add_item(btnSong)
@@ -530,7 +530,7 @@ class music(commands.Cog):
                 if voice_client is None or not voice_client.is_connected():
                     await interaction.response.send_massage("먼저 보이스채널에 접속해주세요")
 
-                if self.queue.qsize() == 1:  # 큐가 비어있으면 재생 시작
+                if self.queue.qsize() == 1 and not voice_client.is_playing():  # 큐가 비어있으면 재생 시작
                     await self.play_next_music(interaction.guild)
 
             else:
