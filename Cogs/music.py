@@ -189,7 +189,7 @@ class music(commands.Cog):
                 voice_client.source.volume = self.volume / 100
                 await("**"+name+"**님이 신청한 총 **"
                         + str(self.queue.qsize()) +"**개의 곡 중 **"
-                        + music_name.split('/')[1].split('.')[0] +"**의 재생을 시작하겠습니다.")
+                        + str(music_name).split('/')[1].split('.')[0] +"**의 재생을 시작하겠습니다.")
             else:
                 self.queue = queue.Queue()
 
