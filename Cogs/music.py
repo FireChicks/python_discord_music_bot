@@ -189,11 +189,12 @@ class music(commands.Cog):
                 self.queue = queue.Queue()
                 await guild.text_channels[0].send("음성 채널에 연결되어 있지 않습니다.")
 
-    async def after_play(self,guild):
+    async def after_play(self,guild, interaction):
         # 재생이 끝난 음성 파일을 제거하고 다음 메시지를 재생합니다.
         que = self.queue.get()
         music_name = que['path']
         name = que['author']
+        target_channel = self.bot.get_channel(self.target_channel_id)
         if not self.queue.empty():
             voice_client = guild.voice_client
             voice_client.stop()
@@ -201,10 +202,11 @@ class music(commands.Cog):
             self.now_music_name = music_name
             voice_client.play(source, after=lambda e: self.after_play(e))
             voice_client.source.volume = self.volume / 100
-            await guild.me.voice.channel.send("**"+ name +"++가 추가한 다음 노래 **" + music_name.split('/')[1].split('.')[0] + "**가 재생됩니다.")
+            await target_channel.send("**"+ name +"++가 추가한 다음 노래 **" + music_name.split('/')[1].split('.')[0] + "**가 재생됩니다.")
         else:
             # 큐가 비어있으면 Bot을 음소거 해제합니다.
-            await guild.me.voice.channel.send("다음 노래가 없습니다.")
+            await target_channel.send("다음 노래가 없습니다.")
+
     def makePlayList(self):
         count = 0
         table = ''
