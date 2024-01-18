@@ -25,8 +25,8 @@ target_channel_id의 채널에서 유튜브 링크를 올리면 이런식으로 
 이미 다운로드 받은 노래명을 사용해 검색할수도 있습니다. 입력한 문자열을 사용해서 검색해줍니다.<br>
 <img src="https://drive.google.com/uc?export=view&id=19F7v7BhFaDMVUrl-PoPo2dAF90LB8miF">
 검색한 내용은 다음과 같이 버튼으로 표시되며 버튼을 클릭하면 자동으로 노래가 플레이리스트큐에 추가됩니다.<br>
-
--2024-01-09-
+<hr>
+-2024-01-09-<br>
 ![image](https://github.com/FireChicks/python_discord_music_bot/assets/113798364/9a6c5dd3-8a4b-4d13-b54c-5c6228f1a5e8)<br>
 랜덤 노래 추가기능을 추가했습니다.<br>
 ![image](https://github.com/FireChicks/python_discord_music_bot/assets/113798364/a3bcf6b4-12b2-4e66-ae8e-28bca6d1b30a)<br>
