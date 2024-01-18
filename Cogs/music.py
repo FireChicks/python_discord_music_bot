@@ -169,8 +169,6 @@ class music(commands.Cog):
                         music_name = que['path']
                         name = str(que['author'])
 
-                        voice_client.stop()
-
                         source = discord.PCMVolumeTransformer(FFmpegPCMAudio(music_name))
                         self.now_music_name = music_name
                         voice_client.play(source, after=after_play)  # 수정된 부분
@@ -363,8 +361,7 @@ class music(commands.Cog):
 
         voice_client = interaction.guild.voice_client
         if voice_client.is_playing() and self.queue.qsize() > 0:
-            voice_client.stop()
-            await self.play_next_music(interaction.guild)
+            await self.after_play(interaction.guild)
         else :
             await interaction.response.send_message("현재 플레이리스트에 다음 노래가 없습니다.")
 
