@@ -377,8 +377,13 @@ class music(commands.Cog):
         name="random",
         description="랜덤으로 노래를 추가합니다."
     )
-    async def random_append_music(self, interaction: discord.Interaction, count: int) -> None:
-        if count >= 0:
+    async def random_append_music(self, interaction: discord.Interaction, input_count: str) -> None:
+        try:
+            count = int(input_count)
+        except ValueError as e:
+            await interaction.response.send_message("추가할 노래의 개수를 입력해주세요.")
+            count = 0
+        if count > 0:
 
             self.found_files = self.search_random_music(count)
             member: Member = interaction.user
