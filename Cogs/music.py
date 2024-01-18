@@ -152,7 +152,7 @@ class music(commands.Cog):
             #신청한 사람
             name = str(que['author'])
             #노래 이름
-            music_name = que['path']
+            music_name = str(que['path']).split('/')[1]
             voice_channel = guild.me.voice.channel
             voice_client = guild.voice_client
 
@@ -166,8 +166,9 @@ class music(commands.Cog):
 
                     if not self.queue.empty():
                         que = self.queue.get()
-                        music_name = que['path']
+                        music_name = str(que['path']).split('/')[1]
                         name = str(que['author'])
+
                         source = discord.PCMVolumeTransformer(FFmpegPCMAudio(music_name))
                         self.now_music_name = music_name
                         voice_client.play(source, after=after_play)  # 수정된 부분
