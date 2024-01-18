@@ -352,7 +352,7 @@ class music(commands.Cog):
         voice_channel: VoiceChannel = member.voice.channel  # 사용자가 접속한 음성 채널 가져오기
 
         voice_client = interaction.guild.voice_client
-        if voice_client.is_playing() and self.queue.qsize() > 0:
+        if self.queue.qsize() > 0:
             await self.after_play(interaction.guild)
         else :
             await interaction.response.send_message("현재 플레이리스트에 다음 노래가 없습니다.")
