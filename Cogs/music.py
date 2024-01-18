@@ -187,7 +187,7 @@ class music(commands.Cog):
                 voice_client.source.volume = self.volume / 100
             else:
                 self.queue = queue.Queue()
-                await self.send_music_info("음성채널에 연결되어있지 않습니다.")
+                self.send_music_info("음성채널에 연결되어있지 않습니다.")
 
     def after_play(self, guild):
         # 재생이 끝난 음성 파일을 제거하고 다음 메시지를 재생합니다.
@@ -209,9 +209,9 @@ class music(commands.Cog):
             self.send_music_info("더이상 재생할 노래가 없습니다.")
 
 
-    async def send_music_info(self, str):
+    def send_music_info(self, str):
         target_channel = self.bot.get_channel(self.target_channel_id)
-        await target_channel.send( str)
+        target_channel.send(str)
 
     def makePlayList(self):
         count = 0
