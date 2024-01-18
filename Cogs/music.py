@@ -388,7 +388,7 @@ class music(commands.Cog):
                 queue_part = {'path': self.downloadPath + file_name, 'author': interaction.user.name}
                 self.queue.put(queue_part)
 
-            await interaction.response.send_message("성공적으로 **"+ count +"**개의 노래를 추가했습니다.")
+            await interaction.response.send_message("성공적으로 **"+ str(count) +"**개의 노래를 추가했습니다.")
 
             if self.queue.qsize() == 1:  # 큐가 비어있으면 재생 시작
                 await self.play_next_music(interaction.guild)
