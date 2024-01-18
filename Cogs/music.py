@@ -172,8 +172,11 @@ class music(commands.Cog):
                         music_name = que['path']
                         source = discord.PCMVolumeTransformer(FFmpegPCMAudio(music_name))
                         self.now_music_name = music_name
-                        await voice_client.play(source, after=functools.partial(self.after_play,
-                                                                                guild=guild))  # functools.partial로 함수와 인자 전달
+
+                        # 수정된 부분: 직접 함수 호출하고 필요한 부분에서 await 사용
+                        await self.after_play(error)
+
+                        voice_client.play(source, after=after_play)
                         voice_client.source.volume = self.volume / 100
                         target_channel = self.bot.get_channel(self.target_channel_id)
                         msg = (
@@ -187,24 +190,23 @@ class music(commands.Cog):
 
                 source = discord.PCMVolumeTransformer(FFmpegPCMAudio(music_name))
                 self.now_music_name = music_name
-                await voice_client.play(source, after=functools.partial(after_play))  # functools.partial로 함수와 인자 전달
+                voice_client.play(source, after=after_play)
                 voice_client.source.volume = self.volume / 100
             else:
                 self.queue = queue.Queue()
                 await self.send_music_info("음성채널에 연결되어있지 않습니다.")
 
-    async def after_play(self, error, guild):  # async 함수로 변경
+    async def after_play(self, error):
         que = self.queue.get()
         music_name = que['path']
         name = que['author']
 
         if not self.queue.empty():
-            voice_client = guild.voice_client
+            voice_client = self.bot.get_guild(self.target_guild_id).voice_client
             voice_client.stop()
             source = discord.PCMVolumeTransformer(FFmpegPCMAudio(music_name))
             self.now_music_name = music_name
-            await voice_client.play(source, after=functools.partial(self.after_play,
-                                                                    guild=guild))  # functools.partial로 함수와 인자 전달
+            voice_client.play(source, after=self.after_play)
             voice_client.source.volume = self.volume / 100
             msg = (
                     "**" + name + "**가 추가한 다음 노래 **" +
