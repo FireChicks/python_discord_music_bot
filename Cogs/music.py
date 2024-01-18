@@ -89,6 +89,10 @@ class music(commands.Cog):
         await self.insert_music(message)
 
     async def insert_music(self, message):
+
+        voice_channel = message.guild.me.voice.channel
+        voice_client = message.guild.voice_client
+
         url = ''
         if message.content.startswith("https://www.youtube.com/watch?v="): #URL 파싱
             url = message.content.split("https://www.youtube.com/watch?v=")[1]
@@ -139,7 +143,7 @@ class music(commands.Cog):
             if self.queue.qsize() == 1:  # 큐가 비어있으면 재생 시작
                 await self.play_next_music(message.guild)
 
-            elif not message.voice_client.is_playing() and self.queue.qsize() != 0:
+            elif not voice_client.is_playing() and self.queue.qsize() != 0:
                 await self.after_play(message.guild)
 
         except yt_dlp.utils.DownloadError as e:
@@ -393,10 +397,10 @@ class music(commands.Cog):
 
             await interaction.response.send_message("성공적으로 **"+ str(count) +"**개의 노래를 추가했습니다.")
 
-            if self.queue.qsize() == 1:  # 큐가 비어있으면 재생 시작
+            if self.queue.qsize() == count:  # 큐가 비어있으면 재생 시작
                 await self.play_next_music(interaction.guild)
 
-            elif not voice_client.is_playing() and self.queue.qsize() != 0:
+            if not voice_client.is_playing() and self.queue.qsize() != 0:
                 await self.after_play(interaction.guild)
         else:
             await interaction.response.send_message("추가할 노래의 개수는 0보다 크고 30보다 작아야 합니다.")
