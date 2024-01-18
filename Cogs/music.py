@@ -146,7 +146,7 @@ class music(commands.Cog):
             await message.channel.send("오류가 발생했습니다. 자세한 로그를 확인하세요.")
             print(f"다운로드 오류: {e}")
 
-    async def play_next_music(self, guild):
+    async def play_next_music(self, guild, interaction: Interaction):
         if self.queue.qsize() == 1 and not guild.voice_client.is_playing(): #첫 노래고 재생이 안되고 있을 때
             music_name = self.queue.get()['path']
             voice_channel = guild.me.voice.channel
@@ -166,7 +166,7 @@ class music(commands.Cog):
                         self.now_music_name = music_name
                         voice_client.play(source, after=after_play)  # 수정된 부분
                         voice_client.source.volume = self.volume / 100
-                        await guild.text_channels[0].send("**" + music_name + "** 을 재생합니다.")
+                        await interaction.response.send_message("**" + music_name + "** 을 재생합니다.")
                     else:
                         # 큐가 비어있으면 Bot을 음소거 해제합니다.
                         guild.me.edit(deafen=False)
@@ -175,7 +175,7 @@ class music(commands.Cog):
                 self.now_music_name = music_name
                 voice_client.play(source, after=after_play)  # 수정된 부분
                 voice_client.source.volume = self.volume / 100
-                await guild.text_channels[0].send("**" + music_name + "** 을 재생합니다.")
+                await interaction.response.send_message("**" + music_name + "** 을 재생합니다.")
             else:
                 self.queue = queue.Queue()
                 await guild.text_channels[0].send("음성 채널에 연결되어 있지 않습니다.")
@@ -368,7 +368,7 @@ class music(commands.Cog):
         name="random",
         description="랜덤으로 노래를 추가합니다."
     )
-    async def random_append_music(self, interaction: discord.Interaction, count: str) -> None:
+    async def random_append_music(self, interaction: discord.Interaction, count: int) -> None:
         if count >= 0:
 
             self.found_files = self.search_random_music(count)
