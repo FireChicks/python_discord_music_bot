@@ -21,7 +21,6 @@ class music(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
         self.target_channel_id = 789084495584165899  # 명령어를 받을 채널
-        self.target_channel = bot.get_channel(self.target_channel_id)
         self.queue = queue.Queue()
         self.now_music_name = ''
         self.found_files = []
@@ -173,7 +172,8 @@ class music(commands.Cog):
                         self.now_music_name = music_name
                         voice_client.play(source, after=after_play)  # 수정된 부분
                         voice_client.source.volume = self.volume / 100
-                        await self.target_channel.send("**"+ name +"**이 추가한 **" + music_name + "** 을 재생합니다.")
+                        target_channel = self.bot.get_channel(self.target_channel_id)
+                        await target_channel.send("**"+ name +"**이 추가한 **" + music_name + "** 을 재생합니다.")
                     else:
                         # 큐가 비어있으면 Bot을 음소거 해제합니다.
                         guild.me.edit(deafen=False)
@@ -182,7 +182,8 @@ class music(commands.Cog):
                 self.now_music_name = music_name
                 voice_client.play(source, after=after_play)  # 수정된 부분
                 voice_client.source.volume = self.volume / 100
-                await self.target_channel.send("**"+ name +"**이 추가한 **" + music_name + "** 을 재생합니다.")
+                target_channel = self.bot.get_channel(self.target_channel_id)
+                await target_channel.send("**"+ name +"**이 추가한 **" + music_name + "** 을 재생합니다.")
             else:
                 self.queue = queue.Queue()
                 await guild.text_channels[0].send("음성 채널에 연결되어 있지 않습니다.")
