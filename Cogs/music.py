@@ -152,7 +152,7 @@ class music(commands.Cog):
             #신청한 사람
             name = str(que['author'])
             #노래 이름
-            music_name = str(que['path']).split('/')[1]
+            music_name = que['path']
             voice_channel = guild.me.voice.channel
             voice_client = guild.voice_client
 
@@ -166,7 +166,7 @@ class music(commands.Cog):
 
                     if not self.queue.empty():
                         que = self.queue.get()
-                        music_name = str(que['path']).split('/')[1]
+                        music_name = que['path']
                         name = str(que['author'])
 
                         source = discord.PCMVolumeTransformer(FFmpegPCMAudio(music_name))
@@ -174,7 +174,7 @@ class music(commands.Cog):
                         voice_client.play(source, after=after_play)  # 수정된 부분
                         voice_client.source.volume = self.volume / 100
                         target_channel = self.bot.get_channel(self.target_channel_id)
-                        await target_channel.send("**"+ name +"**이 추가한 **" + music_name + "** 을 재생합니다.")
+                        await target_channel.send("**"+ name +"**이 추가한 **" + music_name.split('/')[1] + "** 을 재생합니다.")
                     else:
                         # 큐가 비어있으면 Bot을 음소거 해제합니다.
                         guild.me.edit(deafen=False)
@@ -184,7 +184,7 @@ class music(commands.Cog):
                 voice_client.play(source, after=after_play)  # 수정된 부분
                 voice_client.source.volume = self.volume / 100
                 target_channel = self.bot.get_channel(self.target_channel_id)
-                await target_channel.send("**"+ name +"**이 추가한 **" + music_name + "** 을 재생합니다.")
+                await target_channel.send("**"+ name +"**이 추가한 **" + music_name.split('/')[1] + "** 을 재생합니다.")
             else:
                 self.queue = queue.Queue()
                 await guild.text_channels[0].send("음성 채널에 연결되어 있지 않습니다.")
