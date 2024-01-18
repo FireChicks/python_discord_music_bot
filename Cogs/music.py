@@ -169,6 +169,8 @@ class music(commands.Cog):
                         music_name = que['path']
                         name = str(que['author'])
 
+                        voice_client.stop()
+
                         source = discord.PCMVolumeTransformer(FFmpegPCMAudio(music_name))
                         self.now_music_name = music_name
                         voice_client.play(source, after=after_play)  # 수정된 부분
