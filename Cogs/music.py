@@ -199,16 +199,17 @@ class music(commands.Cog):
         music_name = que['path']
         name = que['author']
         target_channel = self.bot.get_channel(self.target_channel_id)
+
         if not self.queue.empty():
             voice_client = guild.voice_client
             voice_client.stop()
             source = discord.PCMVolumeTransformer(FFmpegPCMAudio(music_name))
             self.now_music_name = music_name
-            voice_client.play(source, after=self.after_play)
+            voice_client.play(source, after=lambda e: asyncio.create_task(self.after_play(guild)))
             voice_client.source.volume = self.volume / 100
-            await target_channel.send("**"+ name +"**가 추가한 다음 노래 **" + music_name.split('/')[1].split('.')[0] + "**가 재생됩니다.")
+            await target_channel.send(
+                "**" + name + "**가 추가한 다음 노래 **" + music_name.split('/')[1].split('.')[0] + "**가 재생됩니다.")
         else:
-            # 큐가 비어있으면 Bot을 음소거 해제합니다.
             await target_channel.send("다음 노래가 없습니다.")
 
     def makePlayList(self):
@@ -313,7 +314,8 @@ class music(commands.Cog):
 
         self.clear_playList()
 
-        await voice_channel.send("플레이리스트를 초기화 했습니다.")
+        target_channel = self.bot.get_channel(self.target_channel_id)
+        await target_channel.send("플레이리스트를 초기화 했습니다.")
 
 
     @commands.command()
