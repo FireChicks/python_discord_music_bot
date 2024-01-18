@@ -164,7 +164,7 @@ class music(commands.Cog):
                 if not voice_client or not voice_client.is_connected():
                     voice_client = await voice_channel.connect()
 
-                async def after_play(error):
+                def after_play(error):
                     if error:
                         print(f"오류 발생: {error}")
 
@@ -174,11 +174,8 @@ class music(commands.Cog):
                         self.now_music_name = music_name
                         voice_client.play(source, after=after_play)  # 수정된 부분
                         voice_client.source.volume = self.volume / 100
-                        target_channel = self.bot.get_channel(self.target_channel_id)
-                        str = "**" + name + "**가 추가한 다음 노래 **" + music_name.split('/')[1].split('.')[0] + "**가 재생됩니다."
-                        await self.send_music_info(str)
                     else:
-                        await self.send_music_info("재생할 노래가 없습니다.")
+                        print('더이상 재생할 노래가 없습니다.')
 
                 source = discord.PCMVolumeTransformer(FFmpegPCMAudio(music_name))
                 self.now_music_name = music_name
@@ -188,7 +185,7 @@ class music(commands.Cog):
                 self.queue = queue.Queue()
                 await self.send_music_info("음성채널에 연결되어있지 않습니다.")
 
-    async def after_play(self, guild):
+    def after_play(self, guild):
         # 재생이 끝난 음성 파일을 제거하고 다음 메시지를 재생합니다.
         que = self.queue.get()
         music_name = que['path']
