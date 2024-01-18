@@ -1,4 +1,3 @@
-import functools
 import queue
 import random
 import time
@@ -152,14 +151,16 @@ class music(commands.Cog):
             print(f"다운로드 오류: {e}")
 
     async def play_next_music(self, guild):
-        if self.queue.qsize() == 1 and not guild.voice_client.is_playing():
+        if self.queue.qsize() == 1 and not guild.voice_client.is_playing():  # 첫 노래고 재생이 안되고 있을 때
             que = self.queue.get()
+            # 신청한 사람
             name = str(que['author'])
+            # 노래 이름
             music_name = que['path']
             voice_channel = guild.me.voice.channel
             voice_client = guild.voice_client
 
-            if voice_channel:
+            if voice_channel:  # 채널 연결여부 확인
                 if not voice_client or not voice_client.is_connected():
                     voice_client = await voice_channel.connect()
 
@@ -168,58 +169,48 @@ class music(commands.Cog):
                         print(f"오류 발생: {error}")
 
                     if not self.queue.empty():
-                        que = self.queue.get()
-                        music_name = que['path']
+                        music_name = self.queue.get()['path']
                         source = discord.PCMVolumeTransformer(FFmpegPCMAudio(music_name))
                         self.now_music_name = music_name
-
-                        # 수정된 부분: 직접 함수 호출하고 필요한 부분에서 await 사용
-                        await self.after_play(error)
-
-                        voice_client.play(source, after=after_play)
+                        voice_client.play(source, after=after_play)  # 수정된 부분
                         voice_client.source.volume = self.volume / 100
                         target_channel = self.bot.get_channel(self.target_channel_id)
-                        msg = (
-                                "**" + name + "**가 추가한 다음 노래 **" +
-                                music_name.split('/')[1].split('.')[0] +
-                                "**가 재생됩니다."
-                        )
-                        await self.send_music_info(msg)
+                        str = "**" + name + "**가 추가한 다음 노래 **" + music_name.split('/')[1].split('.')[0] + "**가 재생됩니다."
+                        await self.send_music_info(str)
                     else:
-                        await self.send_music_info("모든 노래를 재생했습니다.")
+                        await self.send_music_info("재생할 노래가 없습니다.")
 
                 source = discord.PCMVolumeTransformer(FFmpegPCMAudio(music_name))
                 self.now_music_name = music_name
-                voice_client.play(source, after=after_play)
+                voice_client.play(source, after=after_play)  # 수정된 부분
                 voice_client.source.volume = self.volume / 100
             else:
                 self.queue = queue.Queue()
                 await self.send_music_info("음성채널에 연결되어있지 않습니다.")
 
-    async def after_play(self, error):
+    def after_play(self, guild):
+        # 재생이 끝난 음성 파일을 제거하고 다음 메시지를 재생합니다.
         que = self.queue.get()
         music_name = que['path']
         name = que['author']
 
+
         if not self.queue.empty():
-            voice_client = self.bot.get_guild(self.target_guild_id).voice_client
+            voice_client = guild.voice_client
             voice_client.stop()
             source = discord.PCMVolumeTransformer(FFmpegPCMAudio(music_name))
             self.now_music_name = music_name
             voice_client.play(source, after=self.after_play)
             voice_client.source.volume = self.volume / 100
-            msg = (
-                    "**" + name + "**가 추가한 다음 노래 **" +
-                    music_name.split('/')[1].split('.')[0] +
-                    "**가 재생됩니다."
-            )
-            await self.send_music_info(msg)
+            str = "**" + name + "**가 추가한 다음 노래 **" + music_name.split('/')[1].split('.')[0] + "**가 재생됩니다."
+            await self.send_music_info(str)
         else:
             await self.send_music_info("더이상 재생할 노래가 없습니다.")
 
-    async def send_music_info(self, msg):
+
+    async def send_music_info(self, str):
         target_channel = self.bot.get_channel(self.target_channel_id)
-        await target_channel.send(msg)
+        await target_channel.send( str)
 
     def makePlayList(self):
         count = 0
