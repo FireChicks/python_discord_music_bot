@@ -204,7 +204,7 @@ class music(commands.Cog):
             voice_client.stop()
             source = discord.PCMVolumeTransformer(FFmpegPCMAudio(music_name))
             self.now_music_name = music_name
-            voice_client.play(source, after=lambda e: self.after_play(e))
+            voice_client.play(source, after=self.after_play)
             voice_client.source.volume = self.volume / 100
             await target_channel.send("**"+ name +"**가 추가한 다음 노래 **" + music_name.split('/')[1].split('.')[0] + "**가 재생됩니다.")
         else:
