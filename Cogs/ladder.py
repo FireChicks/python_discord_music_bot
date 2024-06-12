@@ -16,7 +16,7 @@ class Ladder(commands.Cog):
     @app_commands.describe(
         result="결과들을 /으로 구분하여 입력하세요. 예: 결과1/결과2/결과3"
     )
-    async def game_start(self, interaction: Interaction, result: str) -> None:
+    async def ladder_start(self, interaction: Interaction, result: str) -> None:
         if interaction.user.voice is None or interaction.user.voice.channel is None:
             await interaction.response.send_message("먼저 보이스 채널에 접속해야 합니다.")
             return
