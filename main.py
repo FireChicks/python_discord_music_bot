@@ -18,7 +18,8 @@ class MyBot(commands.Bot):
         )
         self.initial_extension = [
             "Cogs.hello",
-            "Cogs.music"# tts 코그 추가
+            "Cogs.music",
+            "Cogs.ladder"# tts 코그 추가
         ]
         self.queue = queue.Queue()
 
