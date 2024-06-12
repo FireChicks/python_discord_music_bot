@@ -14,7 +14,7 @@ class Ladder(commands.Cog):
         description="현재 보이스 채널의 멤버들로 사다리 게임을 시작합니다."
     )
     @app_commands.describe(
-        결과="결과들을 공백으로 구분하여 입력하세요. 예: 결과1/결과2/결과3"
+        result="결과들을 공백으로 구분하여 입력하세요. 예: 결과1/결과2/결과3"
     )
     async def game_start(self, interaction: Interaction, result: str) -> None:
         if interaction.user.voice is None or interaction.user.voice.channel is None:
