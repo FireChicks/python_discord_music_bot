@@ -25,6 +25,7 @@ class music(commands.Cog):
         self.now_music_name = ''
         self.found_files = []
         self.volume = 50
+        self.isRandomAppend = False
 
         self.downloadPath = "downloads/"
         #self.ffmpegPath = "C:\Program Files/ffmpeg-6.0-full_build/bin/ffmpeg.exe"
@@ -171,6 +172,12 @@ class music(commands.Cog):
                 def after_play(error):
                     if error:
                         print(f"오류 발생: {error}")
+
+                    if self.queue.empty() and self.isRandomAppend:
+                        self.found_files = self.search_random_music(1)
+                        for file_name in self.found_files:
+                            queue_part = {'path': self.downloadPath + file_name, 'author': '랜덤 추가'}
+                            self.queue.put(queue_part)
 
                     if not self.queue.empty():
                         music_name = self.queue.get()['path']
@@ -347,6 +354,24 @@ class music(commands.Cog):
             await interaction.response.send_message("검색어를 제공하지 않았습니다. 검색어를 입력하세요.")
 
     @app_commands.command(
+        name="autoPlay",
+        description="랜덤으로 노래를 계속 재생할지 여부를 변경합니다."
+    )
+    async def flip_auto_play(self, interaction: discord.Interaction, input_count: str) -> None:
+            member: Member = interaction.user
+            voice_channel: VoiceChannel = member.voice.channel
+            voice_client = interaction.guild.voice_client
+
+            if not self.isRandomAppend:  # 큐가 비어있으면 재생 시작
+                self.isRandomAppend = True
+                await interaction.response.send_message("이제 노래가 비었을 때 랜덤으로 노래를 재생합니다.")
+            else:
+                self.isRandomAppend = False
+                await interaction.response.send_message("이제 노래가 비었을 때 랜덤으로 노래를 재생하지 않습니다.")
+
+
+
+    @app_commands.command(
         name="다음",
         description="다음 노래를 재생합니다."
     )
@@ -359,7 +384,7 @@ class music(commands.Cog):
             await self.play_next_music(interaction.guild)
         else :
             await interaction.response.send_message("현재 플레이리스트에 다음 노래가 없습니다.")
-        await interaction.response.send_message("현재 플레이리스트에 다음 노래가 없습니다.")
+        await interaction.response.send_message("다음 노래를 시작합니다.")
 
     @app_commands.command(
         name="random",
