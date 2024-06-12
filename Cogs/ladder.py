@@ -14,7 +14,7 @@ class Ladder(commands.Cog):
         description="현재 보이스 채널의 멤버들로 사다리 게임을 시작합니다."
     )
     @app_commands.describe(
-        result="결과들을 공백으로 구분하여 입력하세요. 예: 결과1/결과2/결과3"
+        result="결과들을 /으로 구분하여 입력하세요. 예: 결과1/결과2/결과3"
     )
     async def game_start(self, interaction: Interaction, result: str) -> None:
         if interaction.user.voice is None or interaction.user.voice.channel is None:
@@ -31,6 +31,34 @@ class Ladder(commands.Cog):
             return
 
         matches = list(zip(participants, random.sample(resultList, len(resultList))))
+
+        imageRoute = self.generate_ladder_image(matches)
+        await interaction.response.send_message(file=discord.File(imageRoute))
+
+    @app_commands.command(
+        name="게임사다리",
+        description="현재 보이스 채널의 멤버들로 사다리 게임을 시작합니다."
+    )
+    @app_commands.describe(
+        game_list="게임들을 /으로 구분하여 입력하세요. 예: 게임1/게임2/게임3"
+    )
+    async def game_start(self, interaction: Interaction, game_list: str) -> None:
+        if interaction.user.voice is None or interaction.user.voice.channel is None:
+            await interaction.response.send_message("먼저 보이스 채널에 접속해야 합니다.")
+            return
+
+        voice_channel = interaction.user.voice.channel
+        resultList = game_list.split('/')
+
+        winngs = ['당첨']
+
+        while True:
+            if len(winngs) != len(resultList):
+                winngs.append('꽝')
+            else :
+                break
+
+        matches = list(zip(winngs, random.sample(resultList, len(resultList))))
 
         imageRoute = self.generate_ladder_image(matches)
         await interaction.response.send_message(file=discord.File(imageRoute))
