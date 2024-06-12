@@ -157,12 +157,6 @@ class music(commands.Cog):
         else:
             voice_client = await voice_channel.connect()
 
-        if self.queue.empty() and self.isRandomAppend:
-            self.found_files = self.search_random_music(1)
-            for file_name in self.found_files:
-                queue_part = {'path': self.downloadPath + file_name, 'author': '랜덤 추가'}
-                self.queue.put(queue_part)
-
         if not self.queue.empty():
             if voice_client.is_playing():
                 voice_client.stop()
@@ -178,6 +172,12 @@ class music(commands.Cog):
                 def after_play(error):
                     if error:
                         print(f"오류 발생: {error}")
+
+                    if self.queue.empty() and self.isRandomAppend:
+                        self.found_files = self.search_random_music(1)
+                        for file_name in self.found_files:
+                            queue_part = {'path': self.downloadPath + file_name, 'author': '랜덤 추가'}
+                            self.queue.put(queue_part)
 
                     if not self.queue.empty():
                         music_name = self.queue.get()['path']
@@ -383,6 +383,13 @@ class music(commands.Cog):
         if self.queue.qsize() > 0:
             await self.play_next_music(interaction.guild)
         else :
+            if self.isRandomAppend:
+                self.found_files = self.search_random_music(1)
+                for file_name in self.found_files:
+                    queue_part = {'path': self.downloadPath + file_name, 'author': '랜덤 추가'}
+                    self.queue.put(queue_part)
+                    await interaction.response.send_message("다음 노래 " + file_name + "을 재생합니다.")
+
             await interaction.response.send_message("현재 플레이리스트에 다음 노래가 없습니다.")
         await interaction.response.send_message("다음 노래를 시작합니다.")
 
