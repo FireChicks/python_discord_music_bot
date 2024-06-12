@@ -37,10 +37,14 @@ class Ladder(commands.Cog):
 
     def generate_ladder_image(self, matches):
         # 이미지 크기 설정
-        width, height = 300, 50 * len(matches) + 50
+        width, height = 500, 50 * len(matches) + 50
         image = Image.new('RGB', (width, height), 'white')
         draw = ImageDraw.Draw(image)
         font = ImageFont.load_default()
+
+        # 한글 폰트 로드
+        font_path = "/python/python_discord_music_bot/font/NanumGothicBold.ttf"  # NanumGothic 폰트 파일 경로
+        font = ImageFont.truetype(font_path, 18)  # 폰트 크기 지정 (원하는 크기로 변경하세요)
 
         # 참가자 이름 및 결과 작성
         for i, (participant, result) in enumerate(matches):

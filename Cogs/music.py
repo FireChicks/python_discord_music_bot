@@ -357,7 +357,7 @@ class music(commands.Cog):
         name="autoplay",
         description="랜덤으로 노래를 계속 재생할지 여부를 변경합니다."
     )
-    async def flip_auto_play(self, interaction: discord.Interaction, input_count: str) -> None:
+    async def flip_auto_play(self, interaction: discord.Interaction) -> None:
             member: Member = interaction.user
             voice_channel: VoiceChannel = member.voice.channel
             voice_client = interaction.guild.voice_client
