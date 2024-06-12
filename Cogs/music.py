@@ -354,7 +354,7 @@ class music(commands.Cog):
             await interaction.response.send_message("검색어를 제공하지 않았습니다. 검색어를 입력하세요.")
 
     @app_commands.command(
-        name="autoPlay",
+        name="autoplay",
         description="랜덤으로 노래를 계속 재생할지 여부를 변경합니다."
     )
     async def flip_auto_play(self, interaction: discord.Interaction, input_count: str) -> None:
