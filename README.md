@@ -37,7 +37,9 @@ target_channel_id의 채널에서 유튜브 링크를 올리면 이런식으로 
 <br>
 -2024-06-13-<br>
 사다리 타기 기능 추가
+
 ![image](https://github.com/FireChicks/python_discord_music_bot/assets/113798364/85109856-526b-4d0c-af8f-88bfbd9817a8)
+
 꽝 당첨 사다리 타기 기능
 ![image](https://github.com/FireChicks/python_discord_music_bot/assets/113798364/4ccb6a26-aa08-41f7-87f1-481122519c75)
 
