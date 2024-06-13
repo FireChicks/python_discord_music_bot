@@ -33,3 +33,17 @@ target_channel_id의 채널에서 유튜브 링크를 올리면 이런식으로 
 랜덤 노래 추가기능을 추가했습니다.<br>
 저장된 노래중에서 count 개수만큼(0~30까지) 자동으로 노래를 추가해줍니다.
 <img src="https://github.com/FireChicks/python_discord_music_bot/assets/113798364/a3bcf6b4-12b2-4e66-ae8e-28bca6d1b30a"><br>
+
+<br>
+-2024-06-13-<br>
+사다리 타기 기능 추가
+
+![image](https://github.com/FireChicks/python_discord_music_bot/assets/113798364/9f7164f2-cec8-461d-9966-922d1a0bd822)
+
+
+꽝 당첨 사다리 타기 기능
+![image](https://github.com/FireChicks/python_discord_music_bot/assets/113798364/7418303d-e2ae-4e62-bd8a-c15cc38b0738)
+
+
+노래없을때 랜덤 추가기능 추가
+![image](https://github.com/FireChicks/python_discord_music_bot/assets/113798364/92b5e62d-8405-4ffc-ad79-4bfc1d730182)
