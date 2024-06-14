@@ -435,6 +435,7 @@ class music(commands.Cog):
         btnPlay = Button(label="▶️", style=ButtonStyle.primary)
         btnSkip = Button(label="⏭️", style=ButtonStyle.primary)
         btnRes  = Button(label="⏯️", style=ButtonStyle.primary)
+        btnRan = Button(label="Ran", style=ButtonStyle.primary)
 
         async def btn_vl_up_callback(interaction: Interaction):
             member: Member = interaction.user
@@ -579,6 +580,15 @@ class music(commands.Cog):
             else:
                 await interaction.response.send_message("유효한 번호를 입력해주세요.")
 
+        async def btn_random_play_callback(interaction: Interaction):
+            if not self.isRandomAppend:  # 큐가 비어있으면 재생 시작
+                self.isRandomAppend = True
+                await interaction.response.send_message("이제 노래가 비었을 때 랜덤으로 노래를 재생합니다.", view=view)
+            else:
+                self.isRandomAppend = False
+                await interaction.response.send_message("이제 노래가 비었을 때 랜덤으로 노래를 재생하지 않습니다.", view=view)
+            await interaction.message.delete()
+
         btnVlUp.callback = btn_vl_up_callback
         btnVlDown.callback = btn_vl_down_callback
         btnStop.callback = btn_stop_callback
@@ -588,6 +598,7 @@ class music(commands.Cog):
         btnSearch.callback = btn_search_callback
         btnInsert.callback = btn_insert_callback
         btnRes.callback = btn_reset_callback
+        btnRan.callback = btn_random_play_callback
         view = View()
 
         view.add_item(btnVlDown)
@@ -599,6 +610,7 @@ class music(commands.Cog):
         view.add_item(btnPlay)
         view.add_item(btnSkip)
         view.add_item(btnRes)
+        view.add_item(btnRan)
 
         await interaction.response.send_message("버튼을 눌러서 조작해주세요.", view=view)
 
