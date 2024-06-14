@@ -522,6 +522,7 @@ class music(commands.Cog):
                         queue_part = {'path': self.downloadPath + file_name, 'author': '랜덤 추가'}
                         self.queue.put(queue_part)
                         await self.play_next_music(interaction.guild)
+                        await interaction.response.send_message("랜덤으로 추가한 다음 노래 **『" + self.now_music_name +"』** 을 재생합니다.", view=view)
                 await interaction.response.send_message("플레이리스트에 다음 노래가 없습니다.",view=view)
 
             await interaction.message.delete()
