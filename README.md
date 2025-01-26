@@ -47,3 +47,8 @@ target_channel_id의 채널에서 유튜브 링크를 올리면 이런식으로 
 
 노래없을때 랜덤 추가기능 추가
 ![image](https://github.com/FireChicks/python_discord_music_bot/assets/113798364/92b5e62d-8405-4ffc-ad79-4bfc1d730182)
+
+-2025-01-26-<br>
+사람이 보이스채널에 존재하지 않을 시 자동 퇴장기능 추가(10분)
+![image](https://github.com/user-attachments/assets/30313ea1-fb17-440a-b43a-2206bcd27372)
+
