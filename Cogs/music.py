@@ -54,6 +54,29 @@ class music(commands.Cog):
         await interaction.response.send_message("보이스채널에 입장합니다")
         print("bot이 " + voice_channel.name + "에 입장하였습니다.")
 
+        # 보이스 채널에 사람이 없으면 10분 후에 나가도록 설정
+        await self.monitor_voice_channel(voice_client, voice_channel)
+
+    async def monitor_voice_channel(self, voice_client, voice_channel: VoiceChannel) -> None:
+        while voice_client.is_connected():
+            # 봇을 제외한 사람 확인
+            members_in_channel = sum(1 for member in voice_channel.members if not member.bot)
+            print(f"체크실시, 현재 사람 수: {members_in_channel}")
+
+            # 만약 채널에 사람이 없다면
+            if members_in_channel == 0:
+                print(f"채널에 사람이 없으므로 10분 뒤에 나갑니다.")
+                await asyncio.sleep(600)  # 10분 동안 대기 (600초)
+
+                # 10분 후에도 여전히 채널에 사람이 없다면 나가기
+                if sum(1 for member in voice_channel.members if not member.bot) == 0:
+                    await voice_client.disconnect()
+                    print(f"보이스 채널에서 나갔습니다. ({voice_channel.name})")
+                    break
+
+            # 주기적으로 확인 (1분마다 체크)
+            await asyncio.sleep(60)
+
     @app_commands.command(
         name="퇴장",
         description="봇을 퇴장시킵니다."
